@@ -1,37 +1,54 @@
-import requests
-import json
-import os
 import discord
+import requests
 from discord.ext import commands
 from discord.ext.commands import bot
 from discord import embeds
-response = requests.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin')
-json_data = response.json()
+import json
 
-client = commands.Bot(command_prefix='.')    #define bot prefix
+client = commands.Bot(command_prefix='.')
 
+@client.command()
+async def nanopoolergo(ctx, *, arg):
+    nanopoolwork = requests.get('https://api.nanopool.org/v1/ergo/balance/' + arg)
+    nanopool_data = nanopoolwork.json()
+    await ctx.send(nanopool_data['data'])
 
 
 @client.command()
-async def ping(ctx):
-    await ctx.send('Pong! {0}'.format(round(bot.latency, 1)))
+async def ergowallet(ctx, *, arg):
+    ergoexp = requests.get('https://api.ergoplatform.com/api/v1/addresses/' + arg + '/balance/total')
+    egoexpdate = ergoexp.json()
+    await ctx.send(egoexpdate['confirmed']['nanoErgs'])
 
-@client.command()                                       # wide command and processing
-async def nanopoolergo(ctx, *, arg):
-    nanopoolwork = requests.get('https://api.nanopool.org/v1/ergo/user/' + arg)
-    nanopool_data = nanopoolwork.json()
-    worker = requests.get('https://api.nanopool.org/v1/ergo/workers' + arg)
-    worker_data = worker.json()
-    embedVar = discord.Embed(title="Ergo NanoPool Info", color=0x00ff00)
-    embedVar.set_image(url="https://s2.coinmarketcap.com/static/img/coins/200x200/1762.png")
-    embedVar.add_field(name="Description", value=nanopool_data['data'], inline=False)
-    embedVar.add_field(name="Ratings", value=worker_data['data'][0]['id'], inline=False)
-    await ctx.send(embed=embedVar)
+@client.command()
+async def flypool(ctx, *, arg):
+    flypoolapi = requests.get('https://api-ergo.flypool.org/miner/" + arg + "/dashboard')
+    flyerg = flypoolapi.json()
+    await ctx.send(flyerg['data']['currentStatistics']['unpaid'] / 1000000000)
 
+@client.command()
+async def nanopooleth(ctx, *, arg):
+    nanopooleth = requests.get('https://api.nanopool.org/v1/eth/balance/' + arg)
+    nanopoolapi = nanopooleth.json()
+    await ctx.send("Pool bilance" + nanopoolapi['data'])
 
+@client.command()
+async def twominerseth(ctx, *, arg):
+    nanopooleth = requests.get('https://eth.2miners.com/api/accounts/' + arg)
+    nanopoolapi = nanopooleth.json()
+    await ctx.send("Pool bilance" + nanopoolapi['stats']['paid'] / 1000000000)
+
+@client.command()
+async def ethermine(ctx, *, arg):
+    nanopooleth = requests.get('https://api.ethermine.org/miner/' + arg + "/dashboard")
+    nanopoolapi = nanopooleth.json()
+    await ctx.send("Pool bilance" + nanopoolapi['data']['currentStatistics']['unpaid'] / 1000000000000000000)
+
+@client.command()
+async def hiveon(ctx, *, arg):
+    hiveeth = requests.get('https://hiveon.net/api/v1/stats/miner/walletAddress123/' + wallet + "ETH/billing-acc")
+    hiveapi = hiveeth.json()
+    bilance = (hiveapi['succeedPayouts'] + hiveapi['pendingPayouts']) / 1000000000000000000
+    await ctx.send("Pool bilance" + bilance)
 
 client.run('TOKEN')
-
-
-
-
