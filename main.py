@@ -53,10 +53,24 @@ async def ethermine(ctx, *, arg):
 
 @client.command()
 async def hiveon(ctx, *, arg):
-    hiveeth = requests.get('https://hiveon.net/api/v1/stats/miner/walletAddress123/' + wallet + "ETH/billing-acc")
+    hiveeth = requests.get('https://hiveon.net/api/v1/stats/miner/walletAddress123/' + arg + "ETH/billing-acc")
     hiveapi = hiveeth.json()
     bilance = (hiveapi['succeedPayouts'] + hiveapi['pendingPayouts']) / 1000000000000000000
     ethbalance = str(bilance)
     await ctx.send(ethbalance + " ETH")
+
+@client.command()
+async def nanopoolmonero(ctx, *, arg):
+    xmr = requests.get('https://api.nanopool.org/v1/xmr/balance/' + arg)
+    xmrapi = xmr.json()
+    ethbalance = str(xmrapi['data'])
+    await ctx.send(ethbalance + " XMR")
+
+@client.command()
+async def twominersxmr(ctx, *, arg):
+    nanopooleth = requests.get('https://xmr.2miners.com/api/accounts/' + arg)
+    nanopoolapi = nanopooleth.json()
+    ethbalance = str(nanopoolapi['stats']['paid'] / 1000000000)
+    await ctx.send(ethbalance + " XMR")
 
 client.run('TOKEN')
