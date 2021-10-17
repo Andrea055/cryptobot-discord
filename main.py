@@ -126,15 +126,20 @@ async def shiba(ctx):
     await ctx.send(embed=embed)
 
 @client.command()
-async def etc(ctx):
+async def ethereumclassic(ctx):
+    difficulty=requests.get("https://api-etc.ethermine.org/networkStats")
+    difjson=difficulty.json()
+    dif=difjson['data']['difficulty']/1000000000000
+    msgdif = str(dif)
     cg = CoinGeckoAPI()
-    etc = cg.get_coin_by_id("ethereumclassic")
+    etc = cg.get_coin_by_id("ethereum-classic")
     etcvalue=etc['market_data']['current_price']['usd']
     msg=str(etcvalue)
     embed = discord.Embed(title="Ethereum Classic", url="https://www.coingecko.com/en/coins/ethereum-classic",
                           description="Price:" + msg + " USD", color=0x4e9a06)
     embed.set_author(name="Ethereum Classic", icon_url=etc['image']['thumb'])
     embed.set_thumbnail(url=etc['image']['thumb'])
+    embed.add_field(name="Current difficulty", value=msgdif + " TH", inline=True)
     await ctx.send(embed=embed)
 
 @client.command()
@@ -163,6 +168,10 @@ async def helium(ctx):
 
 @client.command()
 async def ravencoin(ctx):
+    difficulty=requests.get("https://api-ravencoin.flypool.org/networkStats")
+    difjson=difficulty.json()
+    dif=difjson['data']['difficulty']/1000
+    msgdif = str(dif)
     cg = CoinGeckoAPI()
     rvn = cg.get_coin_by_id("ravencoin")
     rvnvalue=rvn['market_data']['current_price']['usd']
@@ -171,10 +180,11 @@ async def ravencoin(ctx):
                           description="Price:" + msg + " USD", color=0xce5c00)
     embed.set_author(name="Ravencoin", icon_url=rvn['image']['thumb'])
     embed.set_thumbnail(url=rvn['image']['thumb'])
+    embed.add_field(name="Current difficulty", value=msgdif + " K", inline=True)
     await ctx.send(embed=embed)
 
 @client.command()
-async def eth(ctx):
+async def ethereum(ctx):
     cg = CoinGeckoAPI()
     eth = cg.get_coin_by_id("ethereum")
     ethvalue=eth['market_data']['current_price']['usd']
@@ -185,6 +195,23 @@ async def eth(ctx):
     msgdif = str(dif)
     embed = discord.Embed(title="Ethereum", url="https://www.coingecko.com/it/monete/ethereum", color=0x204a87)
     embed.set_author(name="Ethereum", icon_url=eth['image']['thumb'])
+    embed.set_thumbnail(url=eth['image']['thumb'])
+    embed.add_field(name="Price", value=msg + " USD", inline=True)
+    embed.add_field(name="Current difficulty", value=msgdif + " PH", inline=True)
+    await ctx.send(embed=embed)
+
+@client.command()
+async def ergo(ctx):
+    cg = CoinGeckoAPI()
+    eth = cg.get_coin_by_id("ergo")
+    ethvalue=eth['market_data']['current_price']['usd']
+    msg=str(ethvalue)
+    difficulty=requests.get("https://api-ergo.flypool.org/networkStats")
+    difjson=difficulty.json()
+    dif=difjson['data']['difficulty']/10000000000000
+    msgdif = str(dif)
+    embed = discord.Embed(title="Ergo", url="https://www.coingecko.com/en/coins/ergo", color=0x204a87)
+    embed.set_author(name="Ergo", icon_url=eth['image']['thumb'])
     embed.set_thumbnail(url=eth['image']['thumb'])
     embed.add_field(name="Price", value=msg + " USD", inline=True)
     embed.add_field(name="Current difficulty", value=msgdif + " PH", inline=True)
