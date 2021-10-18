@@ -18,5 +18,10 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Please make sure to update tests as appropriate.
 
+## TODO list
+1. fix chart date
+2. add ETC and Ravencoin to nanopool
+3. fix hiveonpool api for add workers
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
