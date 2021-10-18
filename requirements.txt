@@ -1,0 +1,8 @@
+ discord.py
+ pandas
+ matplotlib
+ requests
+ json
+ pycoingecko
+ plotly
+ 
