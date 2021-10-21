@@ -445,6 +445,11 @@ async def twominersxmr(ctx, *, arg):
     ethbalance = str(nanopoolapi['stats']['paid'] / 1000000000)
     await ctx.send(ethbalance + " XMR")
 
+@client.command()
+async def ethtxid(ctx, *, arg):
+    status= requests.get("https://api.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=" + arg + "&apikey=YOURAPIKEY")
+    statusmsg=status.json()
+    await ctx.send("Your transition is" + statusmsg['message'])
 
 
 client.run('TOKEN')
