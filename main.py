@@ -36,6 +36,8 @@ async def helpcoin(ctx):
     embed.add_field(name=".ethereumclassic", value="Give info about Ethereum Classic", inline=False)
     embed.add_field(name=".monero", value="Give info about Monero", inline=False)
     embed.add_field(name=".helium", value="Give info about Helium", inline=False)
+    embed.add_field(name=".ergowallet", value="Give info about an Ergo Wallet", inline=False)
+    embed.add_field(name=".ethtxid", value="Give info about an Ethereum transition", inline=False)
     await ctx.send(embed=embed)
 
 @client.command()
@@ -49,6 +51,8 @@ async def helppool(ctx):
     embed.add_field(name=".ethermine+wallet", value="Give info about mining ethermine pool", inline=False)
     embed.add_field(name=".hiveon+wallet", value="Give info about mining on Hiveon pool", inline=False)
     embed.add_field(name=".nanopoolmonero+wallet", value="Give info about mining Monero on Nanopool", inline=False)
+    embed.add_field(name=".nanopooletc+wallet", value="Give info about mining Ethereum Classic on Nanopool", inline=False)
+    embed.add_field(name=".nanopoolrvn+wallet", value="Give info about mining Ravencoin on Nanopool", inline=False)
     embed.add_field(name=".twominersxmr+wallet", value="Give info about mining Monero on 2miners", inline=False)
     await ctx.send(embed=embed)
 
@@ -373,12 +377,12 @@ async def nanopooleth(ctx, *, arg):
     nanopoolshare = requests.get('https://api.nanopool.org/v1/eth/balance//shareratehistory/' + arg)
     nanopool_share = nanopoolshare.json()
     ergoshare = nanopool_share['data'][0]['shares']
-    embed = discord.Embed(title="Nanopool Ergo", url="https://ergo.nanopool.org/account/" + arg,
+    embed = discord.Embed(title="Nanopool Ethereum", url="https://eth.nanopool.org/account/" + arg,
                           description="Mining on wallet: " + arg)
-    embed.set_author(name="Nanopool Ergo mining",
+    embed.set_author(name="Nanopool Ethereum mining",
                      icon_url="https://s2.coinmarketcap.com/static/img/coins/200x200/1762.png")
     embed.add_field(name="Hashrate", value=ergohash + " Mh/s", inline=True)
-    embed.add_field(name="Balance", value=ergobalance + " ERG", inline=False)
+    embed.add_field(name="Balance", value=ergobalance + " ETH", inline=False)
     embed.add_field(name="Shares", value=ergoshare, inline=False)
     await ctx.send(embed=embed)
 
@@ -433,10 +437,64 @@ async def hiveon(ctx, *, arg):
 
 @client.command()
 async def nanopoolmonero(ctx, *, arg):
-    xmr = requests.get('https://api.nanopool.org/v1/xmr/balance/' + arg)
-    xmrapi = xmr.json()
-    ethbalance = str(xmrapi['data'])
-    await ctx.send(ethbalance + " XMR")
+    nanopooleth = requests.get('https://api.nanopool.org/v1/xmr/balance/' + arg)
+    nanopoolapi = nanopooleth.json()
+    ethbalance = str(nanopoolapi['data'])
+    nanopoolhash = requests.get('https://api.nanopool.org/v1/xmr/balance/avghashratelimited/' + arg + "/24")
+    nanopool_hash = nanopoolhash.json()
+    ergohash = str(nanopool_hash['data'])
+    nanopoolshare = requests.get('https://api.nanopool.org/v1/xmr/balance/shareratehistory/' + arg)
+    nanopool_share = nanopoolshare.json()
+    ergoshare = nanopool_share['data'][0]['shares']
+    embed = discord.Embed(title="Nanopool Monero", url="https://xmr.nanopool.org/account/" + arg,
+                          description="Mining on wallet: " + arg)
+    embed.set_author(name="Nanopool Monero mining",
+                     icon_url="https://s2.coinmarketcap.com/static/img/coins/64x64/328.png")
+    embed.add_field(name="Hashrate", value=ergohash + " Mh/s", inline=True)
+    embed.add_field(name="Balance", value=ergobalance + " XMR", inline=False)
+    embed.add_field(name="Shares", value=ergoshare, inline=False)
+    await ctx.send(embed=embed)
+
+@client.command()
+async def nanopoolrvn(ctx, *, arg):
+    nanopooleth = requests.get('https://api.nanopool.org/v1/rvn/balance/' + arg)
+    nanopoolapi = nanopooleth.json()
+    ethbalance = str(nanopoolapi['data'])
+    nanopoolhash = requests.get('https://api.nanopool.org/v1/rvn/balance/avghashratelimited/' + arg + "/24")
+    nanopool_hash = nanopoolhash.json()
+    ergohash = str(nanopool_hash['data'])
+    nanopoolshare = requests.get('https://api.nanopool.org/v1/rvn/balance/shareratehistory/' + arg)
+    nanopool_share = nanopoolshare.json()
+    ergoshare = nanopool_share['data'][0]['shares']
+    embed = discord.Embed(title="Nanopool Ravencoin", url="https://rvn.nanopool.org/account/" + arg,
+                          description="Mining on wallet: " + arg)
+    embed.set_author(name="Nanopool Ravencoin mining",
+                     icon_url="https://s2.coinmarketcap.com/static/img/coins/64x64/2577.png")
+    embed.add_field(name="Hashrate", value=ergohash + " Mh/s", inline=True)
+    embed.add_field(name="Balance", value=ergobalance + " RVN", inline=False)
+    embed.add_field(name="Shares", value=ergoshare, inline=False)
+    await ctx.send(embed=embed)
+
+@client.command()
+async def nanopooletc(ctx, *, arg):
+    nanopooleth = requests.get('https://api.nanopool.org/v1/etc/balance/' + arg)
+    nanopoolapi = nanopooleth.json()
+    ethbalance = str(nanopoolapi['data'])
+    nanopoolhash = requests.get('https://api.nanopool.org/v1/etc/balance/avghashratelimited/' + arg + "/24")
+    nanopool_hash = nanopoolhash.json()
+    ergohash = str(nanopool_hash['data'])
+    nanopoolshare = requests.get('https://api.nanopool.org/v1/etc/balance/shareratehistory/' + arg)
+    nanopool_share = nanopoolshare.json()
+    ergoshare = nanopool_share['data'][0]['shares']
+    embed = discord.Embed(title="Nanopool Ethereum Classic", url="https://etc.nanopool.org/account/" + arg,
+                          description="Mining on wallet: " + arg)
+    embed.set_author(name="Nanopool Ethereum Classic mining",
+                     icon_url="https://s2.coinmarketcap.com/static/img/coins/64x64/1321.png")
+    embed.add_field(name="Hashrate", value=ergohash + " Mh/s", inline=True)
+    embed.add_field(name="Balance", value=ergobalance + " ETC", inline=False)
+    embed.add_field(name="Shares", value=ergoshare, inline=False)
+    await ctx.send(embed=embed)
+
 
 @client.command()
 async def twominersxmr(ctx, *, arg):
@@ -447,7 +505,7 @@ async def twominersxmr(ctx, *, arg):
 
 @client.command()
 async def ethtxid(ctx, *, arg):
-    status= requests.get("https://api.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=" + arg + "&apikey=YOURAPIKEY")
+    status= requests.get("https://api.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=" + arg + "&apikey=2J73WJQUQ9VZQ5FYQC81R3R4AXQYV8MSBD")
     statusmsg=status.json()
     await ctx.send("Your transition is" + statusmsg['message'])
 
