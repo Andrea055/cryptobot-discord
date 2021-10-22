@@ -505,7 +505,7 @@ async def twominersxmr(ctx, *, arg):
 
 @client.command()
 async def ethtxid(ctx, *, arg):
-    status= requests.get("https://api.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=" + arg + "&apikey=2J73WJQUQ9VZQ5FYQC81R3R4AXQYV8MSBD")
+    status= requests.get("https://api.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=" + arg + "&apikey=APIKEY")
     statusmsg=status.json()
     await ctx.send("Your transition is" + statusmsg['message'])
 
