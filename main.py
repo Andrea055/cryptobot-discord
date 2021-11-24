@@ -360,11 +360,46 @@ async def ergowallet(ctx, *, arg):
 
 
 @client.command()
-async def flypool(ctx, *, arg):
+async def flypoolergo(ctx, *, arg):
     flypoolapi = requests.get('https://api-ergo.flypool.org/miner/" + arg + "/dashboard')
     flyerg = flypoolapi.json()
     ergobalance = str(flyerg['data']['currentStatistics']['unpaid'] / 1000000000)
     await ctx.send(ergobalance + " ERG")
+
+@client.command()
+async def flypoolrvn(ctx, *, arg):
+    flypoolapi = requests.get('https://api-ravencoin.flypool.org/miner/" + arg + "/dashboard')
+    flyerg = flypoolapi.json()
+    ergobalance = str(flyerg['data']['currentStatistics']['unpaid'] / 1000000000)
+    await ctx.send(ergobalance + " RVN")
+
+@client.command()
+async def flypooleth(ctx, *, arg):
+    flypoolapi = requests.get('https://api.ethermine.org/miner/" + arg + "/dashboard')
+    flyerg = flypoolapi.json()
+    ergobalance = str(flyerg['data']['currentStatistics']['unpaid'] / 1000000000)
+    await ctx.send(ergobalance + " ETH")
+
+@client.command()
+async def flypoolzcash(ctx, *, arg):
+    flypoolapi = requests.get('https://api-zcash.flypool.org/miner/" + arg + "/dashboard')
+    flyerg = flypoolapi.json()
+    ergobalance = str(flyerg['data']['currentStatistics']['unpaid'] / 1000000000)
+    await ctx.send(ergobalance + " Zcash")
+
+@client.command()
+async def flypooletc(ctx, *, arg):
+    flypoolapi = requests.get('https://api-etc.ethermine.org/miner/" + arg + "/dashboard')
+    flyerg = flypoolapi.json()
+    ergobalance = str(flyerg['data']['currentStatistics']['unpaid'] / 1000000000)
+    await ctx.send(ergobalance + " ETC")
+
+@client.command()
+async def flypoolbeam(ctx, *, arg):
+    flypoolapi = requests.get('https://api-beam.flypool.org/miner/" + arg + "/dashboard')
+    flyerg = flypoolapi.json()
+    ergobalance = str(flyerg['data']['currentStatistics']['unpaid'] / 1000000000)
+    await ctx.send(ergobalance + " BEAM")
 
 @client.command()
 async def nanopooleth(ctx, *, arg):
