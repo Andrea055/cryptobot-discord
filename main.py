@@ -567,6 +567,10 @@ async def ton(ctx):
     await ctx.send(embed=embed)
     await ctx.send('Thanks CoinGeckoAPI', file=discord.File('ton.png'))
 
-
+@client.command()
+async def tonwallet(ctx, *, arg):
+    tonwallet= requests.get("https://api.ton.sh/getAddressInformation?address=" + arg)
+    tonwalletraw=tonwallet.json()
+    await ctx.send("Your balance is" + tonwalletraw['result']['balance'])
 
 client.run('TOKEN')
