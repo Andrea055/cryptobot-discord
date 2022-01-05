@@ -544,5 +544,29 @@ async def ethtxid(ctx, *, arg):
     statusmsg=status.json()
     await ctx.send("Your transition is" + statusmsg['message'])
 
+@client.command()
+async def ton(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/the-open-network/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('ton.png')
+    cg = CoinGeckoAPI()
+    ton = cg.get_coin_by_id("the-open-network")
+    ethvalue=ton['market_data']['current_price']['usd']
+    msg=str(ethvalue)
+    difficulty=requests.get("https://api-ergo.flypool.org/networkStats")
+    difjson=difficulty.json()
+    dif=difjson['data']['difficulty']/100000000000
+    msgdif = str(dif)
+    embed = discord.Embed(title="TON", url="https://www.coingecko.com/en/coins/the-open-network", color=0x204a87)
+    embed.set_author(name="TON", icon_url=ton['image']['thumb'])
+    embed.set_thumbnail(url=ton['image']['thumb'])
+    embed.add_field(name="Price", value=msg + " USD", inline=True)
+    embed.add_field(name="Current difficulty", value=msgdif + " PH", inline=True)
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('ton.png'))
+
+
 
 client.run('TOKEN')
