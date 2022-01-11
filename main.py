@@ -801,4 +801,16 @@ async def zil(ctx):
     await ctx.send(embed=embed)
     await ctx.send('Thanks CoinGeckoAPI', file=discord.File('zilliqa.png'))
 
+@client.command()
+async def ezil(ctx,*, arg):
+    eziljson = requests.get('https://private-anon-348726f739-ezil.apiary-mock.com/balances/' + arg)
+    ezilelabo = eziljson.json()
+    embed = discord.Embed(title="Ezil", url="https://ezil.me/personal_stats?wallet=" + arg,
+                          description="Mining on wallet: " + arg )
+    embed.set_author(name="Ezil mining pool",
+                     icon_url="https://s2.coinmarketcap.com/static/img/coins/64x64/2469.png")
+    embed.add_field(name="ETH/ETC Balance", value=str(ezilelabo['eth']) + " ETC", inline=False)
+    embed.add_field(name="Zil Balance", value=str(ezilelabo['zil']) + " Zil", inline=False)
+    await ctx.send(embed=embed)
+
 client.run('TOKEN')
