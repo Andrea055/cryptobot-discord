@@ -22,20 +22,22 @@ async def on_ready():
 @client.command()
 async def helpcoin(ctx):
     embed = discord.Embed(title="Help", description="All commands for this bot:")
-    embed.add_field(name=".bitcoin", value="Give info about Bitcoin", inline=False)
-    embed.add_field(name=".ethereum", value="Give info about Ethereum", inline=False)
+    embed.add_field(name=".bitcoin or .btc", value="Give info about Bitcoin", inline=False)
+    embed.add_field(name=".ethereum or .eth", value="Give info about Ethereum", inline=False)
     embed.add_field(name=".bnb", value="Give info about Binance Coin", inline=False)
-    embed.add_field(name=".ravencoin", value="Give info about Ravencoin", inline=False)
+    embed.add_field(name=".ravencoin or .rvn", value="Give info about Ravencoin", inline=False)
     embed.add_field(name=".ergo", value="Give info about Ergo", inline=False)
-    embed.add_field(name=".raptoreum", value="Give info about Raptoreum", inline=False)
-    embed.add_field(name=".cardano", value="Give info about Cardano", inline=False)
-    embed.add_field(name=".solana", value="Give info about Solana", inline=False)
-    embed.add_field(name=".dogecoin", value="Give info about Dogecoin", inline=False)
-    embed.add_field(name=".litecoin", value="Give info about Litecoin", inline=False)
+    embed.add_field(name=".raptoreum or .rtm", value="Give info about Raptoreum", inline=False)
+    embed.add_field(name=".cardano or .ada", value="Give info about Cardano", inline=False)
+    embed.add_field(name=".solana or .sol", value="Give info about Solana", inline=False)
+    embed.add_field(name=".dogecoin or .doge", value="Give info about Dogecoin", inline=False)
+    embed.add_field(name=".litecoin or .ltc", value="Give info about Litecoin", inline=False)
     embed.add_field(name=".shiba", value="Give info about Shiba Inu", inline=False)
-    embed.add_field(name=".ethereumclassic", value="Give info about Ethereum Classic", inline=False)
-    embed.add_field(name=".monero", value="Give info about Monero", inline=False)
-    embed.add_field(name=".helium", value="Give info about Helium", inline=False)
+    embed.add_field(name=".ethereumclassic or .etc", value="Give info about Ethereum Classic", inline=False)
+    embed.add_field(name=".monero or .xmr", value="Give info about Monero", inline=False)
+    embed.add_field(name=".helium or .hnt", value="Give info about Helium", inline=False)
+    embed.add_field(name=".ton", value="Give info about TONCOIN", inline=False)
+    embed.add_field(name=".tonwallet", value="Give info about a TON wallet", inline=False)
     embed.add_field(name=".ergowallet", value="Give info about an Ergo Wallet", inline=False)
     embed.add_field(name=".ethtxid", value="Give info about an Ethereum transition", inline=False)
     await ctx.send(embed=embed)
@@ -54,6 +56,7 @@ async def helppool(ctx):
     embed.add_field(name=".nanopooletc+wallet", value="Give info about mining Ethereum Classic on Nanopool", inline=False)
     embed.add_field(name=".nanopoolrvn+wallet", value="Give info about mining Ravencoin on Nanopool", inline=False)
     embed.add_field(name=".twominersxmr+wallet", value="Give info about mining Monero on 2miners", inline=False)
+    embed.add_field(name=".ezil", value="Give info about mining ETC or ETH and ZIL on Ezil Pool", inline=False)
     await ctx.send(embed=embed)
 
 @client.command()
@@ -84,6 +87,22 @@ async def nanopoolergo(ctx, *, arg):
 
 @client.command()
 async def bitcoin(ctx):
+    cg = CoinGeckoAPI()
+    btc = cg.get_coin_by_id("bitcoin")
+    btcvalue=btc['market_data']['current_price']['usd']
+    msg=str(btcvalue)
+    chart= requests.get("https://bitcoincharts.com/charts/chart.png?width=940&m=bitstampUSD&SubmitButton=Draw&r=60&i=&c=0&s=&e=&Prev=&Next=&t=T&b=&a1=&m1=10&a2=&m2=25&x=0&i1=&i2=&i3=&i4=&v=1&cv=0&ps=0&l=0&p=0&")
+    open('chartbtc.jpg', 'wb').write(chart.content)
+    embed = discord.Embed(title="Bitcoin", url="https://www.coingecko.com/en/coins/bitcoin",
+                          description="Price:" + msg + " USD", color=0xfcaf3e)
+    embed.set_author(name="Bitcoin", icon_url="https://s2.coinmarketcap.com/static/img/coins/200x200/1.png")
+    embed.set_thumbnail(url="https://s2.coinmarketcap.com/static/img/coins/200x200/1.png")
+    embed.add_field(name="Chart:", value="👇", inline=True)
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks to bitcoincharts.com', file=discord.File('chartbtc.jpg'))
+
+@client.command()
+async def btc(ctx):
     cg = CoinGeckoAPI()
     btc = cg.get_coin_by_id("bitcoin")
     btcvalue=btc['market_data']['current_price']['usd']
@@ -135,7 +154,43 @@ async def raptoreum(ctx):
     await ctx.send('Thanks CoinGeckoAPI', file=discord.File('raptoreum.png'))
 
 @client.command()
+async def rtm(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/raptoreum/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('raptoreum.png')
+    cg = CoinGeckoAPI()
+    rtm = cg.get_coin_by_id("raptoreum")
+    rtmvalue=rtm['market_data']['current_price']['usd']
+    msg=str(rtmvalue)
+    embed = discord.Embed(title="Raptoreum", url="https://www.coingecko.com/it/monete/raptoreum",
+                          description="Price:" + msg + " USD", color=0xc17d11)
+    embed.set_author(name="Raptoreum", icon_url=rtm['image']['thumb'])
+    embed.set_thumbnail(url=rtm['image']['thumb'])
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('raptoreum.png'))
+
+@client.command()
 async def cardano(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/cardano/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('cardano.png')
+    cg = CoinGeckoAPI()
+    ada = cg.get_coin_by_id("cardano")
+    adavalue=ada['market_data']['current_price']['usd']
+    msg=str(adavalue)
+    embed = discord.Embed(title="Cardano", url="https://www.coingecko.com/en/coins/cardano",
+                          description="Price:" + msg + " USD", color=0x3465a4)
+    embed.set_author(name="Cardano", icon_url=ada['image']['thumb'])
+    embed.set_thumbnail(url=ada['image']['thumb'])
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('cardano.png'))
+
+@client.command()
+async def ada(ctx):
     data = requests.get("https://api.coingecko.com/api/v3/coins/cardano/market_chart?vs_currency=usd&days=7d")
     d = data.json()
     df = pd.DataFrame(d['prices'])
@@ -171,7 +226,43 @@ async def solana(ctx):
     await ctx.send('Thanks CoinGeckoAPI', file=discord.File('solana.png'))
 
 @client.command()
+async def sol(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/solana/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('solana.png')
+    cg = CoinGeckoAPI()
+    sol = cg.get_coin_by_id("solana")
+    solvalue=sol['market_data']['current_price']['usd']
+    msg=str(solvalue)
+    embed = discord.Embed(title="Solana", url="https://www.coingecko.com/en/coins/solana",
+                          description="Price:" + msg + " USD", color=0x75507b)
+    embed.set_author(name="Solana", icon_url=sol['image']['thumb'])
+    embed.set_thumbnail(url=sol['image']['thumb'])
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('solana.png'))
+
+@client.command()
 async def dogecoin(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/dogecoin/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('dogecoin.png')
+    cg = CoinGeckoAPI()
+    doge = cg.get_coin_by_id("dogecoin")
+    dogevalue=doge['market_data']['current_price']['usd']
+    msg=str(dogevalue)
+    embed = discord.Embed(title="Dogecoin", url="https://www.coingecko.com/en/coins/dogecoin",
+                          description="Price:" + msg + " USD", color=0xedd400)
+    embed.set_author(name="Solana", icon_url=doge['image']['thumb'])
+    embed.set_thumbnail(url=doge['image']['thumb'])
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('dogecoin.png'))
+
+@client.command()
+async def doge(ctx):
     data = requests.get("https://api.coingecko.com/api/v3/coins/dogecoin/market_chart?vs_currency=usd&days=7d")
     d = data.json()
     df = pd.DataFrame(d['prices'])
@@ -205,6 +296,25 @@ async def litecoin(ctx):
     embed.set_thumbnail(url=ltc['image']['thumb'])
     await ctx.send(embed=embed)
     await ctx.send('Thanks CoinGeckoAPI', file=discord.File('litecoin.png'))
+
+@client.command()
+async def ltc(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/litecoin/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('litecoin.png')
+    cg = CoinGeckoAPI()
+    ltc = cg.get_coin_by_id("litecoin")
+    ltcvalue=ltc['market_data']['current_price']['usd']
+    msg=str(ltcvalue)
+    embed = discord.Embed(title="Litecoin", url="https://www.coingecko.com/en/coins/litecoin",
+                          description="Price:" + msg + " USD", color=0x204a87)
+    embed.set_author(name="Litecoin", icon_url=doge['image']['thumb'])
+    embed.set_thumbnail(url=ltc['image']['thumb'])
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('litecoin.png'))
+
 @client.command()
 async def shiba(ctx):
     data = requests.get("https://api.coingecko.com/api/v3/coins/shibainu/market_chart?vs_currency=usd&days=7d")
@@ -246,9 +356,49 @@ async def ethereumclassic(ctx):
     await ctx.send(embed=embed)
     await ctx.send('Thanks CoinGeckoAPI', file=discord.File('etc.png'))
 
+@client.command()
+async def etc(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/ethereum-classic/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('etc.png')
+    difficulty=requests.get("https://api-etc.ethermine.org/networkStats")
+    difjson=difficulty.json()
+    dif=difjson['data']['difficulty']/1000000000000
+    msgdif = str(dif)
+    cg = CoinGeckoAPI()
+    etc = cg.get_coin_by_id("ethereum-classic")
+    etcvalue=etc['market_data']['current_price']['usd']
+    msg=str(etcvalue)
+    embed = discord.Embed(title="Ethereum Classic", url="https://www.coingecko.com/en/coins/ethereum-classic",
+                          description="Price:" + msg + " USD", color=0x4e9a06)
+    embed.set_author(name="Ethereum Classic", icon_url=etc['image']['thumb'])
+    embed.set_thumbnail(url=etc['image']['thumb'])
+    embed.add_field(name="Current difficulty", value=msgdif + " TH", inline=True)
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('etc.png'))
 
 @client.command()
 async def monero(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/monero/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('monero.png')
+    cg = CoinGeckoAPI()
+    xmr = cg.get_coin_by_id("monero")
+    xmrvalue=xmr['market_data']['current_price']['usd']
+    msg=str(xmrvalue)
+    embed = discord.Embed(title="Monero", url="https://www.coingecko.com/en/coins/monero",
+                          description="Price:" + msg + " USD", color=0x8f5902)
+    embed.set_author(name="Monero", icon_url=xmr['image']['thumb'])
+    embed.set_thumbnail(url=xmr['image']['thumb'])
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('monero.png'))
+
+@client.command()
+async def xmr(ctx):
     data = requests.get("https://api.coingecko.com/api/v3/coins/monero/market_chart?vs_currency=usd&days=7d")
     d = data.json()
     df = pd.DataFrame(d['prices'])
@@ -282,6 +432,25 @@ async def helium(ctx):
     embed.set_thumbnail(url=helium['image']['thumb'])
     await ctx.send(embed=embed)
     await ctx.send('Thanks CoinGeckoAPI', file=discord.File('helium.png'))
+
+@client.command()
+async def hnt(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/helium/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('helium.png')
+    cg = CoinGeckoAPI()
+    helium = cg.get_coin_by_id("helium")
+    heliumvalue=helium['market_data']['current_price']['usd']
+    msg=str(heliumvalue)
+    embed = discord.Embed(title="Helium", url="https://www.coingecko.com/en/coins/helium",
+                          description="Price:" + msg + " USD", color=0x204a87)
+    embed.set_author(name="Helium", icon_url=helium['image']['thumb'])
+    embed.set_thumbnail(url=helium['image']['thumb'])
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('helium.png'))
+
 @client.command()
 async def ravencoin(ctx):
     data = requests.get("https://api.coingecko.com/api/v3/coins/ravencoin/market_chart?vs_currency=usd&days=7d")
@@ -306,7 +475,53 @@ async def ravencoin(ctx):
     await ctx.send('Thanks CoinGeckoAPI', file=discord.File('ravencoin.png'))
 
 @client.command()
+async def rvn(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/ravencoin/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('ravencoin.png')
+    difficulty=requests.get("https://api-ravencoin.flypool.org/networkStats")
+    difjson=difficulty.json()
+    dif=difjson['data']['difficulty']/1000
+    msgdif = str(dif)
+    cg = CoinGeckoAPI()
+    rvn = cg.get_coin_by_id("ravencoin")
+    rvnvalue=rvn['market_data']['current_price']['usd']
+    msg=str(rvnvalue)
+    embed = discord.Embed(title="Ravencoin", url="https://www.coingecko.com/en/coins/ravencoin",
+                          description="Price:" + msg + " USD", color=0xce5c00)
+    embed.set_author(name="Ravencoin", icon_url=rvn['image']['thumb'])
+    embed.set_thumbnail(url=rvn['image']['thumb'])
+    embed.add_field(name="Current difficulty", value=msgdif + " K", inline=True)
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('ravencoin.png'))
+
+@client.command()
 async def ethereum(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/ethereum/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('eth.png')
+    cg = CoinGeckoAPI()
+    eth = cg.get_coin_by_id("ethereum")
+    ethvalue=eth['market_data']['current_price']['usd']
+    msg=str(ethvalue)
+    difficulty=requests.get("https://api.ethermine.org/networkStats")
+    difjson=difficulty.json()
+    dif=difjson['data']['difficulty']/1000000000000000
+    msgdif = str(dif)
+    embed = discord.Embed(title="Ethereum", url="https://www.coingecko.com/it/monete/ethereum", color=0x204a87)
+    embed.set_author(name="Ethereum", icon_url=eth['image']['thumb'])
+    embed.set_thumbnail(url=eth['image']['thumb'])
+    embed.add_field(name="Price", value=msg + " USD", inline=True)
+    embed.add_field(name="Current difficulty", value=msgdif + " PH", inline=True)
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('eth.png'))
+
+@client.command()
+async def eth(ctx):
     data = requests.get("https://api.coingecko.com/api/v3/coins/ethereum/market_chart?vs_currency=usd&days=7d")
     d = data.json()
     df = pd.DataFrame(d['prices'])
@@ -555,15 +770,10 @@ async def ton(ctx):
     ton = cg.get_coin_by_id("the-open-network")
     ethvalue=ton['market_data']['current_price']['usd']
     msg=str(ethvalue)
-    difficulty=requests.get("https://api-ergo.flypool.org/networkStats")
-    difjson=difficulty.json()
-    dif=difjson['data']['difficulty']/100000000000
-    msgdif = str(dif)
     embed = discord.Embed(title="TON", url="https://www.coingecko.com/en/coins/the-open-network", color=0x204a87)
     embed.set_author(name="TON", icon_url=ton['image']['thumb'])
     embed.set_thumbnail(url=ton['image']['thumb'])
     embed.add_field(name="Price", value=msg + " USD", inline=True)
-    embed.add_field(name="Current difficulty", value=msgdif + " PH", inline=True)
     await ctx.send(embed=embed)
     await ctx.send('Thanks CoinGeckoAPI', file=discord.File('ton.png'))
 
@@ -572,5 +782,23 @@ async def tonwallet(ctx, *, arg):
     tonwallet= requests.get("https://api.ton.sh/getAddressInformation?address=" + arg)
     tonwalletraw=tonwallet.json()
     await ctx.send("Your balance is" + tonwalletraw['result']['balance'])
+
+@client.command()
+async def zil(ctx):
+    data = requests.get("https://api.coingecko.com/api/v3/coins/zilliqa/market_chart?vs_currency=usd&days=7d")
+    d = data.json()
+    df = pd.DataFrame(d['prices'])
+    df.plot(x=0, y=1)
+    plt.savefig('zilliqa.png')
+    cg = CoinGeckoAPI()
+    zilliqa = cg.get_coin_by_id("zilliqa")
+    zilvalue=zilliqa['market_data']['current_price']['usd']
+    msg=str(zilvalue)
+    embed = discord.Embed(title="Zilliqa", url="https://www.coingecko.com/en/coins/zilliqa", color=0x204a87)
+    embed.set_author(name="Zilliqa", icon_url=zilliqa['image']['thumb'])
+    embed.set_thumbnail(url=zilliqa['image']['thumb'])
+    embed.add_field(name="Price", value=msg + " USD", inline=True)
+    await ctx.send(embed=embed)
+    await ctx.send('Thanks CoinGeckoAPI', file=discord.File('zilliqa.png'))
 
 client.run('TOKEN')
